@@ -97,14 +97,14 @@ function RDG:generate()
 				self.visited_cells[#self.visited_cells+1] = self.current_cell
 			end
 		else
-			if #self.visited_cells == (self.width * self.height) / 2 and not self.try_to_make_exit then
-				self.try_to_make_exit = true
-				self.has_exit = false
-			end
-			if not self.has_exit and self.try_to_make_exit then
-				self:makeExit()
-			end
 			self.current_cell = table.remove(self.previous_cells)
+		end
+		if #self.visited_cells >= (self.width * self.height)/ 2 and not self.try_to_make_exit then
+			self.try_to_make_exit = true
+			self.has_exit = false
+		end
+		if not self.has_exit and self.try_to_make_exit then
+			self:makeExit()
 		end
 		if self.show_steps then
 			self:print()
@@ -159,14 +159,14 @@ function RDG:stepGenerate()
 				self.visited_cells[#self.visited_cells+1] = self.current_cell
 			end
 		else
-			if #self.visited_cells == (self.width * self.height) and not self.try_to_make_exit then
-				self.try_to_make_exit = true
-				self.has_exit = false
-			end
-			if not self.has_exit and self.try_to_make_exit then
-				self:makeExit()
-			end
 			self.current_cell = table.remove(self.previous_cells)
+		end
+		if #self.visited_cells >= (self.width * self.height)/2 and not self.try_to_make_exit then
+			self.try_to_make_exit = true
+			self.has_exit = false
+		end
+		if not self.has_exit and self.try_to_make_exit then
+			self:makeExit()
 		end
 	end
 	return self.maze, self.current_cell, self.previous_cells
@@ -262,16 +262,16 @@ function RDG:makeExit()
 	cur_y = self:getY()
 	cur_x = self:getX()
 
-	if x - 1 < 1 then
+	if x - 1 == 0 then
 		edge = "lt"
-	elseif x + 1 > self.width then
+	elseif x + 1 == self.width + 1 then
 		edge = "rt"
 		cur_x = cur_x + 1
-	elseif y + 1 > self.height then
+	elseif y + 1 == self.height + 1 then
 		edge = "dn"
 		cur_y = cur_y + 1
 	end
-
+	print(edge)
 	if edge then
 		self:removeWall(cur_y .. "|" .. cur_x, edge)
 		self.has_exit = true
